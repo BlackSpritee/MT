@@ -1,0 +1,54 @@
+# 表示作业的基本信息，自动填充，请勿修改
+[base]
+type = ml-easy-job
+
+[resource]
+usergroup = hadoop-hmart-aikg
+queue = root.zw03_training.hadoop-aipnlp.training
+
+[roles]
+workers = 1
+worker.memory = 100480
+worker.vcore = 6
+worker.gcores32g = 2
+# worker启动后执行的脚本，一般为训练作业的执行命令
+worker.script = python v0_re.py
+
+# worker端python脚本的输入参数
+# # 可以设置args.batch_size = 32，则会向worker.script追加参数--batch_size=32
+[user_args]
+args.conf = /opt/meituan/cephfs/user/hadoop-aipnlp/baichuanyang/project/verniesage3/config/erniesage_link_prediction.yaml
+
+
+[am]
+afo.app.am.resource.mb = 4096
+
+[tensorboard]
+with.tensor.board = false
+
+# docker环境配置
+[docker]
+afo.docker.image.name = registryonline-hulk.sankuai.com/custom_prod/com.sankuai.data.hadoop.gpu/afo_job_conda_base_cuda10.1-b64f54b3
+# 是否使用预拉取
+[data]
+afo.data.prefetch=true
+
+# 是否支持容错
+[failover]
+afo.app.support.engine.failover=false
+
+[conda]
+afo.conda.env.name = bcy
+afo.conda.env.path = /home/hadoop-aipnlp/cephfs/data/baichuanyang/project/bcy.tar.gz
+afo.conda.store.type = ceph
+
+[config]
+# config.file =
+
+[others]
+# pytorch dataloader可能会用到共享内存，配置需要的共享内存（单位为B）
+afo.app.env.YARN_CONTAINER_RUNTIME_DOCKER_SHM_SIZE_BYTES=
+# 作业结束后，会通过大象通知用户
+afo.xm.notice.receivers.account= baichuanyang
+with_requirements = false
+
